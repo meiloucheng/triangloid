@@ -1,0 +1,69 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Raleway", arial;
+    text-transform: uppercase;
+    color: #fff;
+}
+.container {
+    width: 100%;
+    min-height: 670px;
+    height: 100%;
+    background-color: #34495e;
+}
+#drop-zone {
+    width: 80%;
+    margin: 40px auto 0px auto;
+    height: 500px;
+    background-color: #ecf0f1;
+}
+.drop-label {
+    text-align: center;
+    margin: 150px auto;
+    width: 200px;
+    display: block;
+    transition: 0.5s opacity;
+    -webkit-transition: 0.5s opacity;
+    -ms-transition: 0.5s opacity;
+    background-color: #3498db;
+    padding: 10px;
+    opacity: 0;
+}
+.hover .drop-label {
+    opacity: 1;
+}
+.btn-container {
+    width: 235px;
+    text-align: center;
+    margin: 10px auto;
+}
+.btn {
+    text-align: center;
+    display: inline-block;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    background-color: #3498db;
+    padding: 10px;
+    display: none;
+    cursor: default;
+}
+.btn:hover {
+    background-color: #2980b9;
+}
+.btn.visible {
+    cursor: pointer;
+    display: inline-block;
+}
+.options {
+    width: 300px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 10px auto;
+}
+.cell-size-input {
+    padding: 5px;
+    font-family: "Raleway", arial;
+    width: 40px;
+    font-size: 15px;
+}

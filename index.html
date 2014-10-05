@@ -1,0 +1,125 @@
+<html>
+
+<head>
+    <title>Triangloid - A Slice of Imagnoid</title>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+    <div class="container">&nbsp;
+        <div id="drop-zone">&nbsp;
+            <div class="drop-label">Drop your image here.</div>
+        </div>
+        <div class="options">
+            Cellsize:
+            <input value="10" class="cell-size-input" />
+        </div>
+        <div class="btn-container">
+            <div class="btn trianglify-btn">Trianglify</div>
+            <div class="btn download-btn">Download</div>
+        </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="triangloid.js"></script>
+    <script>
+        var cellsize = 10;
+        var image, imageHeight, imageWidth, backgroundSize, svg;
+
+        function getImagePixelData(img) {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            var imageData = ctx.getImageData(0, 0, img.width, img.height);
+            var mappedData = [];
+            for (var i = 0; i < imageData.data.length; i += 4) {
+                mappedData.push([imageData.data[i], imageData.data[i + 1], imageData.data[i + 2]]);
+            }
+            return mappedData;
+        }
+        var dropZone = document.getElementById('drop-zone');
+        dropZone.ondragover = function() {
+            this.className = 'hover';
+            return false;
+        };
+        dropZone.ondragleave = function() {
+            dropZone.className = "";
+        }
+        dropZone.ondragend = function() {
+            dropZone.className = "";
+            return false;
+        };
+        dropZone.ondrop = function(e) {
+            dropZone.className = "";
+            e.preventDefault();
+            var file = e.dataTransfer.files[0],
+                reader = new FileReader();
+            reader.onload = function(event) {
+                image = new Image();
+                image.src = imageData = event.target.result;
+                var dropZoneWidth = $(dropZone).width();
+                var dropZoneHeight = $(dropZone).height();
+                var dropZoneRatio = dropZoneWidth / dropZoneHeight;
+                var imageRatio = image.width / image.height;
+                backgroundSize = "";
+                if (image.width > dropZoneWidth) { //Could be expressed in smaller chunks...
+                    if (image.height > dropZoneHeight) {
+                        if (imageRatio > dropZoneRatio) {
+                            backgroundSize += dropZoneWidth;
+                            backgroundSize += " ";
+                            backgroundSize += dropZoneWidth / imageRatio;
+                        } else {
+                            backgroundSize += dropZoneHeight * imageRatio;
+                            backgroundSize += " ";
+                            backgroundSize += dropZoneHeight;
+                        }
+                    } else {
+                        backgroundSize += dropZoneWidth;
+                        backgroundSize += " ";
+                        backgroundSize += dropZoneWidth / imageRatio;
+                    }
+                } else if (image.height > dropZoneHeight) {
+                    backgroundSize += dropZoneHeight * imageRatio;
+                    backgroundSize += " ";
+                    backgroundSize += dropZoneHeight;
+                } else {
+                    backgroundSize = image.width + " " + image.height;
+                }
+                dropZone.style.background = 'url(' + imageData + ') no-repeat center';
+                dropZone.style.backgroundSize = backgroundSize;
+                $(".trianglify-btn").addClass("visible");
+                $(".download-btn").removeClass("visible");
+            };
+            reader.readAsDataURL(file);
+            return false;
+        };
+        $(".cell-size-input").keyup(function() {
+            cellsize = parseInt($(this).val());
+        });
+        $(".trianglify-btn").click(function() {
+            draw(image);
+            $(".download-btn").addClass("visible");
+        });
+        $(".download-btn").click(function() {
+            document.location.href = svg.replace("image/svg+xml", "image/octet-stream");
+        });
+
+        function draw(img) {
+            var imageData = getImagePixelData(img);
+            var triangloid = new Triangloid({
+                cellsize: cellsize
+            });
+
+            var trianglifiedImage = triangloid.trianglifyImage(imageData, img.width, img.height);
+            svg = trianglifiedImage.getSVG();
+            dropZone.style.background = 'url(' + svg + ') no-repeat center';
+            dropZone.style.backgroundSize = backgroundSize;
+
+        }
+    </script>
+</body>
+
+</html>
