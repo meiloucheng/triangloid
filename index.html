@@ -4,23 +4,32 @@
     <title>Triangloid - A Slice of Imagnoid</title>
     <link href='http://fonts.googleapis.com/css?family=Raleway:400,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="style.css" type="text/css" />
+    <base target="_blank"/>
 </head>
 
 <body>
 
-    <div class="container">&nbsp;
+    <div class="container">
+        <div class="options">
+            <h1>Triangloid</h1>
+            <h2>Options</h2>
+            <label for="cell-size-input">Cellsize:</label>
+            <input value="10" id="cell-size-input" />
+            <div class="bottom-align">
+                <div class="btn-container">
+                    <div class="btn trianglify-btn">Trianglify</div>
+                    <div class="btn download-btn">Download</div>
+                </div>
+                <a href="http://github.com/asifmallik/triangloid">View Source Code</a>
+            </div>
+        </div><div class="main"> 
         <label for="imageInput">
             <div id="drop-zone" class="hover">&nbsp;
                 <div class="drop-label">Drop your image or click here</div>
             </div>
         </label>
-        <div class="options">
-            Cellsize:
-            <input value="10" class="cell-size-input" />
-        </div>
-        <div class="btn-container">
-            <div class="btn trianglify-btn">Trianglify</div>
-            <div class="btn download-btn">Download</div>
+        <h2>Developed by Asif Mallik</h2>
+        <div class="social"><a href="http://google.com/+AsifMallik"><img src="img/google-plus.png"/></a><a href="http://youtube.com/TheAsifMallik"><img src="img/youtube.png"/></a><a href="http://twitter.com/TheAsifMallik"><img src="img/twitter.png"/></a><a href="http://facebook.com/TheAsifMallik"><img src="img/facebook.png"/></a><a href="http://http://asifmallik.deviantart.com/"><img src="img/deviantart.png"/></a></div>
         </div>
     </div>
     <input type="file" id="imageInput" />
@@ -59,7 +68,7 @@
         dropZone.ondrop = processInput;
         document.getElementById("imageInput").onchange = processInput;
 
-        $(".cell-size-input").keyup(function() {
+        $("#cell-size-input").keyup(function() {
             cellsize = parseInt($(this).val());
         });
         $(".trianglify-btn").click(function() {
