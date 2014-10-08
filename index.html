@@ -8,7 +8,7 @@
 
 <body>
     <div class="container">&nbsp;
-        <div id="drop-zone">&nbsp;
+        <div id="drop-zone" class="hover">&nbsp;
             <div class="drop-label">Drop your image here.</div>
         </div>
         <div class="options">
@@ -59,39 +59,42 @@
                 reader = new FileReader();
             reader.onload = function(event) {
                 image = new Image();
-                image.src = imageData = event.target.result;
-                var dropZoneWidth = $(dropZone).width();
-                var dropZoneHeight = $(dropZone).height();
-                var dropZoneRatio = dropZoneWidth / dropZoneHeight;
-                var imageRatio = image.width / image.height;
-                backgroundSize = "";
-                if (image.width > dropZoneWidth) { //Could be expressed in smaller chunks...
-                    if (image.height > dropZoneHeight) {
-                        if (imageRatio > dropZoneRatio) {
-                            backgroundSize += dropZoneWidth;
-                            backgroundSize += " ";
-                            backgroundSize += dropZoneWidth / imageRatio;
+                image.onload = function() {
+                    var dropZoneWidth = $(dropZone).width();
+                    var dropZoneHeight = $(dropZone).height();
+                    var dropZoneRatio = dropZoneWidth / dropZoneHeight;
+                    var imageRatio = image.width / image.height;
+                    backgroundSize = "";
+                    if (image.width > dropZoneWidth) { //Could be expressed in smaller chunks...
+                        if (image.height > dropZoneHeight) {
+                            if (imageRatio > dropZoneRatio) {
+                                backgroundSize += dropZoneWidth + "px";
+                                backgroundSize += " ";
+                                backgroundSize += dropZoneWidth / imageRatio + "px";
+                            } else {
+                                backgroundSize += dropZoneHeight * imageRatio + "px";
+                                backgroundSize += " ";
+                                backgroundSize += dropZoneHeight + "px";
+                            }
                         } else {
-                            backgroundSize += dropZoneHeight * imageRatio;
+                            backgroundSize += dropZoneWidth + "px";
                             backgroundSize += " ";
-                            backgroundSize += dropZoneHeight;
+                            backgroundSize += dropZoneWidth / imageRatio + "px";
                         }
-                    } else {
-                        backgroundSize += dropZoneWidth;
+                    } else if (image.height > dropZoneHeight) {
+                        backgroundSize += dropZoneHeight * imageRatio + "px";
                         backgroundSize += " ";
-                        backgroundSize += dropZoneWidth / imageRatio;
+                        backgroundSize += dropZoneHeight + "px";
+                    } else {
+                        backgroundSize = image.width + "px " + image.height + "px";
                     }
-                } else if (image.height > dropZoneHeight) {
-                    backgroundSize += dropZoneHeight * imageRatio;
-                    backgroundSize += " ";
-                    backgroundSize += dropZoneHeight;
-                } else {
-                    backgroundSize = image.width + " " + image.height;
+                    dropZone.style.background = 'url(' + imageData + ') no-repeat center';
+                    dropZone.style.backgroundSize = backgroundSize;
+                    console.log(dropZone.style.backgroundSize);
+                    $(".trianglify-btn").addClass("visible");
+                    $(".download-btn").removeClass("visible");
                 }
-                dropZone.style.background = 'url(' + imageData + ') no-repeat center';
-                dropZone.style.backgroundSize = backgroundSize;
-                $(".trianglify-btn").addClass("visible");
-                $(".download-btn").removeClass("visible");
+                image.src = imageData = event.target.result;
             };
             reader.readAsDataURL(file);
             return false;
