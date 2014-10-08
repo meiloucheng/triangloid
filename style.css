@@ -20,7 +20,7 @@ body {
 .drop-label {
     text-align: center;
     margin: 150px auto;
-    width: 200px;
+    width: 250px;
     display: block;
     transition: 0.5s opacity;
     -webkit-transition: 0.5s opacity;
@@ -29,7 +29,8 @@ body {
     padding: 10px;
     opacity: 0;
 }
-.hover .drop-label {
+.hover .drop-label,
+#drop-zone:hover .drop-label {
     opacity: 1;
 }
 .btn-container {
@@ -66,4 +67,7 @@ body {
     font-family: "Raleway", arial;
     width: 40px;
     font-size: 15px;
+}
+input[type="file"] {
+    display: none;
 }

@@ -7,10 +7,13 @@
 </head>
 
 <body>
+
     <div class="container">&nbsp;
-        <div id="drop-zone" class="hover">&nbsp;
-            <div class="drop-label">Drop your image here.</div>
-        </div>
+        <label for="imageInput">
+            <div id="drop-zone" class="hover">&nbsp;
+                <div class="drop-label">Drop your image or click here</div>
+            </div>
+        </label>
         <div class="options">
             Cellsize:
             <input value="10" class="cell-size-input" />
@@ -20,6 +23,7 @@
             <div class="btn download-btn">Download</div>
         </div>
     </div>
+    <input type="file" id="imageInput" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="triangloid.js"></script>
@@ -52,11 +56,30 @@
             dropZone.className = "";
             return false;
         };
-        dropZone.ondrop = function(e) {
+        dropZone.ondrop = processInput;
+        document.getElementById("imageInput").onchange = processInput;
+
+        $(".cell-size-input").keyup(function() {
+            cellsize = parseInt($(this).val());
+        });
+        $(".trianglify-btn").click(function() {
+            draw(image);
+            $(".download-btn").addClass("visible");
+        });
+        $(".download-btn").click(function() {
+            document.location.href = svg.replace("image/svg+xml", "image/octet-stream");
+        });
+
+        function processInput(e) {
             dropZone.className = "";
             e.preventDefault();
-            var file = e.dataTransfer.files[0],
-                reader = new FileReader();
+            if (e.target.files) {
+                var file = e.target.files[0];
+            } else {
+                var file = e.dataTransfer.files[0];
+            }
+
+            var reader = new FileReader();
             reader.onload = function(event) {
                 image = new Image();
                 image.onload = function() {
@@ -98,17 +121,7 @@
             };
             reader.readAsDataURL(file);
             return false;
-        };
-        $(".cell-size-input").keyup(function() {
-            cellsize = parseInt($(this).val());
-        });
-        $(".trianglify-btn").click(function() {
-            draw(image);
-            $(".download-btn").addClass("visible");
-        });
-        $(".download-btn").click(function() {
-            document.location.href = svg.replace("image/svg+xml", "image/octet-stream");
-        });
+        }
 
         function draw(img) {
             var imageData = getImagePixelData(img);
