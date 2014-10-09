@@ -87,6 +87,6 @@ var Triangloid;
             var y = Math.round(-options.bleed + row * options.cellsize + Math.random() * (options.cellsize - options.cellpadding * 2) + options.cellpadding);
             return [x, y];
         });
-        return d3.geom.delaunay(vertices);
+        return d3.geom.voronoi().triangles(vertices);
     }
 })();
